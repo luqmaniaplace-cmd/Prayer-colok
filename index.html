@@ -301,19 +301,21 @@ function updatePrayerStatus(){
   let now = new Date();
   let currentMinutes = now.getHours()*60 + now.getMinutes();
 
-  // صرف پانچ نمازیں
-  let prayerOrder = ["الفجر","الظہر","العصر","المغرب","العشاء"];
+  let keys = Object.keys(prayerTimes);
+  let times = [];
 
-  let times = prayerOrder.map(name=>{
+  // تمام اوقات کو منٹس میں تبدیل کریں
+  keys.forEach(name=>{
     let time = prayerTimes[name];
-    if(!time) return null;
+    if(!time) return;
+
     time = time.split(" ")[0];
     let [h,m] = time.split(":");
-    return parseInt(h)*60 + parseInt(m);
+    times.push(parseInt(h)*60 + parseInt(m));
   });
 
-  // کلاس صاف کریں
-  prayerOrder.forEach(name=>{
+  // سب کلاس صاف کریں
+  keys.forEach(name=>{
     let row = document.getElementById(name);
     if(row){
       row.classList.remove("active","next");
@@ -324,27 +326,26 @@ function updatePrayerStatus(){
   let nextIndex = -1;
 
   for(let i=0;i<times.length;i++){
-    if(times[i]===null) continue;
-
     if(currentMinutes >= times[i]){
       activeIndex = i;
     }
-
-    if(currentMinutes < times[i] && nextIndex===-1){
+    if(currentMinutes < times[i] && nextIndex === -1){
       nextIndex = i;
     }
   }
 
-  // اگر عشاء کے بعد وقت ہو
+  // اگر آخری وقت کے بعد ہو
   if(nextIndex === -1){
-    nextIndex = 0; // اگلا فجر
+    nextIndex = 0;
   }
 
-  if(activeIndex !== -1){
-    document.getElementById(prayerOrder[activeIndex])?.classList.add("active");
+  // اگر ابھی پہلے وقت سے پہلے ہو
+  if(activeIndex === -1){
+    activeIndex = times.length - 1;
   }
 
-  document.getElementById(prayerOrder[nextIndex])?.classList.add("next");
+  document.getElementById(keys[activeIndex])?.classList.add("active");
+  document.getElementById(keys[nextIndex])?.classList.add("next");
 }
 setInterval(updatePrayerStatus,1000);
 getLocation();
