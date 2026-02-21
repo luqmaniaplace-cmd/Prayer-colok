@@ -295,33 +295,57 @@ function renderPrayers(){
 
 // Update active / next prayer
 function updatePrayerStatus(){
-  let now=new Date();
-  let current=now.getHours()*60+now.getMinutes();
-  let keys=Object.keys(prayerTimes);
-  let nextIndex=null;
 
-  for(let i=0;i<keys.length;i++){
-    let time=prayerTimes[keys[i]].split(" ")[0];
-    let [h,m]=time.split(":");
-    let minutes=parseInt(h)*60+parseInt(m);
-    let row=document.getElementById(keys[i]);
-    if(!row) return;
-    row.classList.remove("active","next");
+  if(!prayerTimes || Object.keys(prayerTimes).length===0) return;
 
-    if(current>=minutes && (i===keys.length-1 || current <
-      (parseInt(prayerTimes[keys[i+1]].split(":")[0])*60+
-       parseInt(prayerTimes[keys[i+1]].split(":")[1])))){
-      row.classList.add("active");
-    } else if(nextIndex===null && current<minutes){
-      nextIndex=i;
+  let now = new Date();
+  let currentMinutes = now.getHours()*60 + now.getMinutes();
+
+  // صرف پانچ نمازیں
+  let prayerOrder = ["الفجر","الظہر","العصر","المغرب","العشاء"];
+
+  let times = prayerOrder.map(name=>{
+    let time = prayerTimes[name];
+    if(!time) return null;
+    time = time.split(" ")[0];
+    let [h,m] = time.split(":");
+    return parseInt(h)*60 + parseInt(m);
+  });
+
+  // کلاس صاف کریں
+  prayerOrder.forEach(name=>{
+    let row = document.getElementById(name);
+    if(row){
+      row.classList.remove("active","next");
+    }
+  });
+
+  let activeIndex = -1;
+  let nextIndex = -1;
+
+  for(let i=0;i<times.length;i++){
+    if(times[i]===null) continue;
+
+    if(currentMinutes >= times[i]){
+      activeIndex = i;
+    }
+
+    if(currentMinutes < times[i] && nextIndex===-1){
+      nextIndex = i;
     }
   }
 
-  if(nextIndex!==null){
-    document.getElementById(keys[nextIndex]).classList.add("next");
+  // اگر عشاء کے بعد وقت ہو
+  if(nextIndex === -1){
+    nextIndex = 0; // اگلا فجر
   }
-}
 
+  if(activeIndex !== -1){
+    document.getElementById(prayerOrder[activeIndex])?.classList.add("active");
+  }
+
+  document.getElementById(prayerOrder[nextIndex])?.classList.add("next");
+}
 setInterval(updatePrayerStatus,1000);
 getLocation();
 </script>
