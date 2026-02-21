@@ -301,17 +301,24 @@ function updatePrayerStatus(){
   let now = new Date();
   let currentMinutes = now.getHours()*60 + now.getMinutes();
 
-  let keys = Object.keys(prayerTimes);
-  let times = [];
+  let keys = [
+    "امساک",
+    "الفجر",
+    "سن رائز",
+    "الظہر",
+    "العصر",
+    "المغرب",
+    "العشاء",
+    "آدھی رات",
+    "آخری تہائی"
+  ];
 
-  // تمام اوقات کو منٹس میں تبدیل کریں
-  keys.forEach(name=>{
+  let times = keys.map(name=>{
     let time = prayerTimes[name];
-    if(!time) return;
-
+    if(!time) return null;
     time = time.split(" ")[0];
     let [h,m] = time.split(":");
-    times.push(parseInt(h)*60 + parseInt(m));
+    return parseInt(h)*60 + parseInt(m);
   });
 
   // سب کلاس صاف کریں
@@ -323,25 +330,22 @@ function updatePrayerStatus(){
   });
 
   let activeIndex = -1;
-  let nextIndex = -1;
 
   for(let i=0;i<times.length;i++){
-    if(currentMinutes >= times[i]){
+    if(times[i] !== null && currentMinutes >= times[i]){
       activeIndex = i;
     }
-    if(currentMinutes < times[i] && nextIndex === -1){
-      nextIndex = i;
-    }
   }
 
-  // اگر آخری وقت کے بعد ہو
-  if(nextIndex === -1){
-    nextIndex = 0;
-  }
-
-  // اگر ابھی پہلے وقت سے پہلے ہو
+  // اگر ابھی امساک سے پہلے وقت ہو
   if(activeIndex === -1){
-    activeIndex = times.length - 1;
+    activeIndex = keys.length - 1; // آخری تہائی
+  }
+
+  let nextIndex = activeIndex + 1;
+
+  if(nextIndex >= keys.length){
+    nextIndex = 0; // دوبارہ امساک
   }
 
   document.getElementById(keys[activeIndex])?.classList.add("active");
