@@ -313,13 +313,33 @@ function updatePrayerStatus(){
     "آخری تہائی"
   ];
 
-  let times = keys.map(name=>{
+  let times = [];
+  let previousTime = 0;
+
+  keys.forEach(name=>{
     let time = prayerTimes[name];
-    if(!time) return null;
+    if(!time){
+      times.push(null);
+      return;
+    }
+
     time = time.split(" ")[0];
     let [h,m] = time.split(":");
-    return parseInt(h)*60 + parseInt(m);
+    let minutes = parseInt(h)*60 + parseInt(m);
+
+    // اگر وقت پچھلے سے چھوٹا ہو تو اسے اگلے دن میں ڈال دیں
+    if(minutes < previousTime){
+      minutes += 1440;
+    }
+
+    times.push(minutes);
+    previousTime = minutes;
   });
+
+  // اگر موجودہ وقت بھی رات کے بعد والا ہو
+  if(currentMinutes < times[0]){
+    currentMinutes += 1440;
+  }
 
   // سب کلاس صاف کریں
   keys.forEach(name=>{
@@ -329,23 +349,17 @@ function updatePrayerStatus(){
     }
   });
 
-  let activeIndex = -1;
+  let activeIndex = 0;
 
   for(let i=0;i<times.length;i++){
-    if(times[i] !== null && currentMinutes >= times[i]){
+    if(currentMinutes >= times[i]){
       activeIndex = i;
     }
   }
 
-  // اگر ابھی امساک سے پہلے وقت ہو
-  if(activeIndex === -1){
-    activeIndex = keys.length - 1; // آخری تہائی
-  }
-
   let nextIndex = activeIndex + 1;
-
   if(nextIndex >= keys.length){
-    nextIndex = 0; // دوبارہ امساک
+    nextIndex = 0;
   }
 
   document.getElementById(keys[activeIndex])?.classList.add("active");
