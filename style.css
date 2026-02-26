@@ -1,6 +1,6 @@
 body{
   background:#111;
-  font-family:Arial;
+  font-family: 'Rajdhani', sans-serif;
   display:flex;
   justify-content:center;
   align-items:flex-start;
@@ -52,16 +52,26 @@ body{
 .prayer-row{
   display:flex;
   justify-content:space-between;
+  align-items:center;
   padding:10px;
   border-radius:8px;
   background:#222;
+  flex-direction:row;   /* LTR */
+}
+
+.label{
+  order:1;
+}
+
+.time{
+  order:2;
 }
 
 .time{
   width:120px;
   font-family:'Digital-7 Mono';
   font-size:28px;
-  padding:5px 10px;
+  padding:5px 10px 10px 10px;
   border-radius:5px;
   color:red;
   background:#000;
@@ -71,6 +81,7 @@ body{
 
 .label{
   font-size:18px;
+  padding: 4px;
   align-self:center;
   background:#000;
   color: lime;
@@ -102,7 +113,9 @@ body{
 .manual-row{
   display:flex;
   justify-content:space-between;
-  padding:5px;
+  align-items:center;
+  flex-direction:row;
+  padding:10px;
   border-radius:8px;
   background:#222;
   margin-top:10px;
@@ -118,15 +131,16 @@ body{
 
 /* LED style display */
 .manual-display{
-  width:145px;
-  height:35px;
+  width:140px;
+  height:25px;
+  padding-bottom: 5px;
   line-height:50px;
   font-family:'Digital-7 Mono';
   font-size:28px;
   color:#0018ff;
   background:#000;
   box-shadow:0 0 15px #0018ff;
-  border-radius:8px;
+  border-radius:5px;
   text-align:center;
   display:flex;
   align-items:center;
@@ -135,6 +149,7 @@ body{
 
 .manual-label{
   font-size:18px;
+  padding: 4.5px;
   align-self:center;
   background:#000;
   color:yellow;
