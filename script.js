@@ -1,19 +1,19 @@
-let prayerTimes={};
+let prayerTimes = {};
 
 const prayerNames = [
-  "امساک",
-  "الفجر",
-  "سن رائز",
-  "اشراق",
-  "چاشت",
-  "زوال",
-  "الظہر",
-  "العصر",
-  "المغرب",
-  "اوابین",
-  "العشاء",
-  "آدھی رات",
-  "آخری تہائی"
+  "Imsak",
+  "Fajr",
+  "Sunrise",
+  "Ishraq",
+  "Chasht",
+  "Zawal",
+  "Dhuhr",
+  "Asr",
+  "Maghrib",
+  "Awwabin",
+  "Isha",
+  "Midnight",
+  "Last Third"
 ];
 
 // 12 Hour Format
@@ -49,19 +49,19 @@ setInterval(updateClock,1000);
 updateClock();
 
 
-// ----------- شروع میں خالی باکس بنائیں -----------
+// ----------- Create Empty Prayer Boxes -----------
 function renderInitialPrayers(){
 
   let html="";
 
   prayerNames.forEach(name=>{
     html+=`<div class="prayer-row" id="${name}">
-      <div class="time">--:--</div>
       <div class="label">${name}</div>
+      <div class="time">--:--</div>
     </div>`;
   });
 
-  // Manual Rows
+  // Manual Jamaat Rows
   const manualNames=["fajr","zuhr","asr","maghrib","isha"];
 
   manualNames.forEach(name=>{
@@ -78,15 +78,17 @@ function renderInitialPrayers(){
 
     html+=`
     <div class="manual-row">
+      <div class="manual-label">
+      ${name==="fajr"?"Fajr":name==="zuhr"?"Zuhr":name==="asr"?"Asr":name==="maghrib"?"Maghrib":"Isha"} Jamaat
+      </div>
       <div class="manual-display" id="${name}Display">${saved || placeholder}</div>
       <input type="text" class="manual-hidden" id="${name}J" placeholder="${placeholder}">
-      <div class="manual-label">${name==="fajr"?"فجر":name==="zuhr"?"ظہر":name==="asr"?"عصر":name==="maghrib"?"مغرب":"عشاء"} جماعت</div>
     </div>`;
   });
 
   document.getElementById("prayerTable").innerHTML=html;
 
-  // Manual input persistence
+  // Manual Save System
   setTimeout(()=>{
     manualNames.forEach(name=>{
       const input = document.getElementById(name+"J");
@@ -103,7 +105,8 @@ function renderInitialPrayers(){
   },100);
 }
 
-// ----------- صرف ٹائم اپڈیٹ کریں -----------
+
+// ----------- Update Prayer Times -----------
 function renderPrayers(){
   for(let name in prayerTimes){
     let row = document.getElementById(name);
@@ -113,6 +116,7 @@ function renderPrayers(){
     }
   }
 }
+
 
 // GPS
 function getLocation(){
@@ -126,74 +130,62 @@ function getLocation(){
   }
 }
 
+
 // Load Prayer Times
 function loadPrayerTimes(lat,lon){
   fetch(`https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lon}&method=1&school=1`)
   .then(res=>res.json())
   .then(data=>{
     let t=data.data.timings;
-    // ---- بنیادی اوقات ----
-let sunrise = t.Sunrise.split(" ")[0];
-let [sh, sm] = sunrise.split(":");
-let sunriseMinutes = parseInt(sh)*60 + parseInt(sm);
 
-let dhuhr = t.Dhuhr.split(" ")[0];
-let [dh, dm] = dhuhr.split(":");
-let dhuhrMinutes = parseInt(dh)*60 + parseInt(dm);
+    let sunrise = t.Sunrise.split(" ")[0];
+    let [sh, sm] = sunrise.split(":");
+    let sunriseMinutes = parseInt(sh)*60 + parseInt(sm);
 
-let maghrib = t.Maghrib.split(" ")[0];
-let [mh, mm] = maghrib.split(":");
-let maghribMinutes = parseInt(mh)*60 + parseInt(mm);
+    let dhuhr = t.Dhuhr.split(" ")[0];
+    let [dh, dm] = dhuhr.split(":");
+    let dhuhrMinutes = parseInt(dh)*60 + parseInt(dm);
 
-// ---- نئے اوقات ----
+    let maghrib = t.Maghrib.split(" ")[0];
+    let [mh, mm] = maghrib.split(":");
+    let maghribMinutes = parseInt(mh)*60 + parseInt(mm);
 
-// 🌅 اشراق (سن رائز کے 20 منٹ بعد)
-let ishraqMinutes = sunriseMinutes + 15;
+    function minutesToTime(min){
+      let h = Math.floor(min/60);
+      let m = min%60;
+      return h.toString().padStart(2,'0')+":"+m.toString().padStart(2,'0');
+    }
 
-// ☀ چاشت (سن رائز کے 120 منٹ بعد)
-let chashtMinutes = sunriseMinutes + 155;
-
-// ⚪ زوال (ظہر سے 10 منٹ پہلے)
-let zawalMinutes = dhuhrMinutes - 12;
-
-// 🌙 اوابین (مغرب کے 15 منٹ بعد)
-let awwabinMinutes = maghribMinutes + 15;
-
-
-// منٹس کو HH:MM میں بدلنے کا فنکشن
-function minutesToTime(min){
-  let h = Math.floor(min/60);
-  let m = min%60;
-  return h.toString().padStart(2,'0')+":"+m.toString().padStart(2,'0');
-}
     prayerTimes={
-      "امساک":t.Imsak,
-      "الفجر":t.Fajr,
-      "سن رائز":t.Sunrise,
-                    "اشراق": minutesToTime(ishraqMinutes),
-"چاشت": minutesToTime(chashtMinutes),
-"زوال": minutesToTime(zawalMinutes),
-      "الظہر":t.Dhuhr,
-      "العصر":t.Asr,
-      "المغرب":t.Maghrib,
-      "اوابین": minutesToTime(awwabinMinutes),
-      "العشاء":t.Isha,
-      "آدھی رات":t.Midnight,
-      "آخری تہائی":t.Lastthird
+      "Imsak":t.Imsak,
+      "Fajr":t.Fajr,
+      "Sunrise":t.Sunrise,
+      "Ishraq": minutesToTime(sunriseMinutes+12),
+      "Chasht": minutesToTime(sunriseMinutes+110),
+      "Zawal": minutesToTime(dhuhrMinutes-10),
+      "Dhuhr":t.Dhuhr,
+      "Asr":t.Asr,
+      "Maghrib":t.Maghrib,
+      "Awwabin": minutesToTime(maghribMinutes+15),
+      "Isha":t.Isha,
+      "Midnight":t.Midnight,
+      "Last Third":t.Lastthird
     };
+
     renderPrayers();
   });
-  
 }
+
 
 // City Name
 function getCityName(lat,lon){
-  fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=ur`)
+  fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`)
   .then(res=>res.json())
   .then(data=>{
-    document.getElementById("cityName").innerHTML="موجودہ شہر: "+data.city;
+    document.getElementById("cityName").innerHTML="Current City: "+data.city;
   });
 }
+
 
 // Active / Next Highlight
 function updatePrayerStatus(){
@@ -256,6 +248,6 @@ function updatePrayerStatus(){
 setInterval(updatePrayerStatus,1000);
 
 
-// ---------- شروع میں باکس بنائیں ----------
+// Start
 renderInitialPrayers();
 getLocation();
