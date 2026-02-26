@@ -1,0 +1,145 @@
+body{
+  background:#111;
+  font-family:Arial;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  padding-top:20px;
+  height: 100%;
+  width: 95%;
+}
+
+.container{
+  background: black;
+  width: 320px;
+  padding: 10px;
+  border-radius: 12px;
+  text-align: center;
+  color: white;
+  margin-bottom: 20px;
+
+}
+
+.title{
+  font-size:26px;
+  margin-bottom:5px;
+  color:cyan;
+  text-shadow:0 0 10px cyan;
+}
+
+.city{
+  font-size:18px;
+  color: free#ccc;
+  margin-bottom:5px;
+  text-sErhadow:0 0 10px #ccc;
+}
+
+.clock{
+  font-family:'Digital-7 Mono';
+  font-size:60px;
+  color:red;
+  text-shadow:0 0 20px red;
+  margin-bottom:20px;
+}
+
+.table-container{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-top:10px;
+}
+
+.prayer-row{
+  display:flex;
+  justify-content:space-between;
+  padding:10px;
+  border-radius:8px;
+  background:#222;
+}
+
+.time{
+  width:120px;
+  font-family:'Digital-7 Mono';
+  font-size:28px;
+  padding:5px 10px;
+  border-radius:5px;
+  color:red;
+  background:#000;
+  box-shadow:0 0 15px red;
+  text-align:center;
+}
+
+.label{
+  font-size:18px;
+  align-self:center;
+  background:#000;
+  color: lime;
+  width:140px;
+  border-radius:5px;
+  box-shadow:0 0 15px lime;
+  text-align:center;
+}
+
+.active .time{ color:lime; box-shadow:0 0 20px lime; }
+.next .time{ color:yellow; box-shadow:0 0 20px yellow; }
+
+.date{
+  height:20px;
+  margin-top:15px;
+  margin-bottom:20px;
+  font-size:18px;
+  font-family:'Digital-7 Mono';
+  color:red;
+  background:#222;
+  padding:10px;
+  padding-top:15px;
+  border-radius:8px;
+  text-align:center;
+  justify-content:center;
+  box-shadow:0 0 10px red;
+}
+
+.manual-row{
+  display:flex;
+  justify-content:space-between;
+  padding:5px;
+  border-radius:8px;
+  background:#222;
+  margin-top:10px;
+  position:relative;
+}
+
+/* Hidden input for real typing */
+.manual-hidden{
+  position:absolute;
+  opacity:0;
+  pointer-events:auto;
+}
+
+/* LED style display */
+.manual-display{
+  width:145px;
+  height:35px;
+  line-height:50px;
+  font-family:'Digital-7 Mono';
+  font-size:28px;
+  color:#0018ff;
+  background:#000;
+  box-shadow:0 0 15px #0018ff;
+  border-radius:8px;
+  text-align:center;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.manual-label{
+  font-size:18px;
+  align-self:center;
+  background:#000;
+  color:yellow;
+  width:140px;
+  border-radius:5px;
+  box-shadow:0 0 15px yellow;
+  text-align:center;
+}
