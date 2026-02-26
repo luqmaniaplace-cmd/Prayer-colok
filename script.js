@@ -89,20 +89,28 @@ function renderInitialPrayers(){
   document.getElementById("prayerTable").innerHTML=html;
 
   // Manual Save System
-  setTimeout(()=>{
-    manualNames.forEach(name=>{
-      const input = document.getElementById(name+"J");
-      const display = document.getElementById(name+"Display");
-      if(input && display){
-        display.innerText = localStorage.getItem(name) || input.placeholder;
+  // Manual input persistence
+setTimeout(()=>{
+  manualNames.forEach(name=>{
+    const input = document.getElementById(name+"J");
+    const display = document.getElementById(name+"Display");
+    if(input && display){
+      // پہلے سے saved value دکھائیں
+      display.innerText = localStorage.getItem(name) || input.placeholder;
 
-        input.addEventListener("input", ()=>{
-          display.innerText = input.value;
-          localStorage.setItem(name, input.value);
-        });
-      }
-    });
-  },100);
+      // input پر change کے ساتھ update
+      input.addEventListener("input", ()=>{
+        display.innerText = input.value;
+        localStorage.setItem(name, input.value);
+      });
+
+      // Tap / Click پر focus کرانے کے لیے
+      display.addEventListener("click", ()=>{
+        input.focus();
+      });
+    }
+  });
+},100);
 }
 
 
