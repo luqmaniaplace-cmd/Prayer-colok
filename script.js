@@ -141,9 +141,11 @@ function getLocation(){
 
 // Load Prayer Times
 function loadPrayerTimes(lat,lon){
+
   fetch(`https://api.aladhan.com/v1/timings?latitude=${lat}&longitude=${lon}&method=1&school=1`)
   .then(res=>res.json())
   .then(data=>{
+
     let t=data.data.timings;
 
     let sunrise = t.Sunrise.split(" ")[0];
@@ -164,7 +166,8 @@ function loadPrayerTimes(lat,lon){
       return h.toString().padStart(2,'0')+":"+m.toString().padStart(2,'0');
     }
 
-    prayerTimes={
+    // ✅ پہلے نیا object بنائیں
+    let newPrayerTimes={
       "Imsak":t.Imsak,
       "Fajr":t.Fajr,
       "Sunrise":t.Sunrise,
@@ -180,9 +183,30 @@ function loadPrayerTimes(lat,lon){
       "Last Third":t.Lastthird
     };
 
+    // 🔐 Compare System
+    let saved = localStorage.getItem("prayerTimes");
+
+    if(saved){
+      let oldPrayerTimes = JSON.parse(saved);
+
+      if(JSON.stringify(oldPrayerTimes) === JSON.stringify(newPrayerTimes)){
+        prayerTimes = oldPrayerTimes;
+        renderPrayers();
+        console.log("No Changes - Using Cached Times");
+        return;
+      }
+    }
+
+    // ✅ اگر فرق ہے تو نیا save کرو
+    prayerTimes = newPrayerTimes;
+    localStorage.setItem("prayerTimes", JSON.stringify(newPrayerTimes));
+
     renderPrayers();
+    console.log("Times Updated!");
+
   });
 }
+
 
 
 // City Name
