@@ -218,6 +218,63 @@ function getCityName(lat,lon){
   });
 }
 
+function startApp(){
+
+  checkInternetAndLocation();
+
+}
+
+// 🔵 Main Check Function
+function checkInternetAndLocation(){
+
+  // 1️⃣ Internet Check
+  if(!navigator.onLine){
+    alert("No Internet Connection /Please turn on your internet connection and try again.");
+    setTimeout(checkInternetAndLocation,3000);
+    return;
+  }
+
+  // 2️⃣ Geolocation Support Check
+  if(!navigator.geolocation){
+    alert("Location Not Supported /Your browser does not support location services.");
+    return;
+  }
+
+  // 3️⃣ GPS + Permission Check
+  navigator.geolocation.getCurrentPosition(
+
+    // ✅ Success
+    position=>{
+      let lat = position.coords.latitude;
+      let lon = position.coords.longitude;
+
+      console.log("All OK - Loading Prayer Times");
+
+      loadPrayerTimes(lat,lon);
+      getCityName(lat,lon);
+    },
+
+    // ❌ Error
+    error=>{
+      if(error.code === 1){
+        alert("Location Disabled /Please enable GPS / Location on your device.");
+             }
+      else if(error.code === 2){
+        alert("Location Disabled /Please enable GPS / Location on your device.");
+      }
+      else{
+        alert("Location Error /Unable to retrieve your location.");
+      }
+
+      setTimeout(checkInternetAndLocation,3000);
+    }
+
+  );
+}
+
+
+
+
 
 // Active / Next Highlight
 function updatePrayerStatus(){
@@ -282,4 +339,4 @@ setInterval(updatePrayerStatus,1000);
 
 // Start
 renderInitialPrayers();
-getLocation();
+startApp();
