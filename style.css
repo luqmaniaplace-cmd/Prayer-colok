@@ -170,27 +170,3 @@ body{
   align-items:center;
   z-index:9999;
 }
-#locationWarning{
-  background: #ffcc00;
-  color:#000;
-  padding:15px 20px;
-  border-radius:10px;
-  margin:10px;
-  font-weight:bold;
-  text-align:center;
-}
-
-#locationWarning button{
-  margin-top:10px;
-  padding:8px 16px;
-  border:none;
-  border-radius:6px;
-  background:#ffaa00;
-  color:#000;
-  font-weight:bold;
-  cursor:pointer;
-}
-
-.hidden{
-  display:none;
-}
