@@ -28,7 +28,15 @@
 
 </head>
 <body>
-    
+    <!-- ============================= -->
+<!-- Inline Location Warning -->
+<!-- ============================= -->
+<div id="locationWarning" class="hidden">
+  <p>📍 Location access is blocked for this site.</p>
+  <p>Please enable location in your browser settings to continue.</p>
+  <button onclick="retryLocation()">Check Again</button>
+</div>
+
 <!-- ====== Main Container ====== -->
 <div class="container">
 
@@ -47,8 +55,25 @@
 
   <!-- Date + Hijri -->
   <div class="date" id="date"></div>
+  <!-- =============================== -->
+<!-- Site Footer -->
+<!-- =============================== -->
+<footer class="site-footer">
+  <div class="footer-content">
+    
+        <p>© 2026 Luqman Ahmad ® | Result by Luqman Ahmad</p>
+    <p>This project and its data may not be copied or reused without permission.</p>
+  </div>
+</footer>
+
 
 </div>
+
+
+
+
+
+
 
 <!-- External JavaScript File -->
 <script src="script.js"></script>
